@@ -22,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body className={`bg-neutral-950 text-white font-mono ${interFont.variable} ${robotoMonoFont.variable}`}>
+            <body className={`bg-neutral-950 text-white font-sans ${interFont.variable} ${robotoMonoFont.variable}`}>
                 {children}
             </body>
         </html>
