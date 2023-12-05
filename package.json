@@ -19,6 +19,7 @@
     },
     "homepage": "https://github.com/logisim-io/website#readme",
     "devDependencies": {
+        "@next/eslint-plugin-next": "^14.0.3",
         "eslint": "^8.55.0",
         "eslint-plugin-react": "^7.33.2"
     },

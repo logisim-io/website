@@ -8,7 +8,6 @@ import MenuBar from '@/components/layout/MenuBar';
 
 export default function MainApplication() {
     const path = usePathname();
-
     const [render, setRender] = useState(false);
 
     useEffect(() => setRender(true), []);
