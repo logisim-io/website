@@ -9,8 +9,6 @@ import MenuBar from '@/components/layout/MenuBar';
 export default function MainApplication() {
     const path = usePathname();
 
-    if (typeof window === 'undefined') return null;
-
     const [render, setRender] = useState(false);
 
     useEffect(() => setRender(true), []);
@@ -29,6 +27,8 @@ export default function MainApplication() {
                     </div>
                 </div>
             </BrowserRouter>
-            : null
+            : <div className="flex items-center justify-center w-[100vw] h-[100vh]">
+                <span className="font-light text-6xl">Loading...</span>
+            </div>
     );
 }
