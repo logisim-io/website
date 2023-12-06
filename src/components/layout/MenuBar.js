@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ChevronDownIcon from '@/assets/icons/chevron-down.svg';
 
-export default function MenuBar({ files: [filesState, filesDispatch] }) {
+export default function MenuBar({ files: { dispatch: filesDispatch } }) {
     const [currentDropdown, setCurrentDropdown] = useState(null);
 
     useEffect(() => {

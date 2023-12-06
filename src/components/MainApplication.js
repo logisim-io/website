@@ -19,7 +19,7 @@ const filesReducer = (state, action) => {
         default:
             return state;
     }
-}
+};
 
 export default function MainApplication() {
     const path = usePathname();
@@ -32,13 +32,8 @@ export default function MainApplication() {
         render
             ? <BrowserRouter>
                 <div className="flex flex-col w-[100vw] h-[100vh]">
-                    <MenuBar files={[filesState, filesDispatch]} />
-                    <FileList
-                        {...filesState}
-                        onChange={(index) => filesDispatch({ type: 'SET_ACTIVE', index })}
-                        onClose={(index) => filesDispatch({ type: 'CLOSE_FILE', index })}
-                        onRename={({ index, value }) => filesDispatch({ type: 'RENAME_FILE', index, value })}
-                    />
+                    <MenuBar files={{ data: filesState, dispatch: filesDispatch }} />
+                    <FileList data={filesState} dispatch={filesDispatch} />
                     <div className="grow bg-neutral-900">
                         <Routes>
                             <Route path="/" element={<p className="p-5">TODO</p>} />
