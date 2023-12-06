@@ -14,13 +14,5 @@ module.exports = {
         });
 
         return config;
-    },
-    rewrites() {
-        return [
-            {
-                source: '/:any*',
-                destination: '/'
-            }
-        ];
     }
 };

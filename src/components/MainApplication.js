@@ -1,8 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { useEffect, useReducer, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import FileList from '@/components/layout/FileList';
 import MenuBar from '@/components/layout/MenuBar';
 
@@ -22,7 +20,6 @@ const filesReducer = (state, action) => {
 };
 
 export default function MainApplication() {
-    const path = usePathname();
     const [render, setRender] = useState(false);
     const [filesState, filesDispatch] = useReducer(filesReducer, { activeIndex: 0, list: [{ name: 'Untitled', dirty: true }] });
 
@@ -30,18 +27,13 @@ export default function MainApplication() {
 
     return (
         render
-            ? <BrowserRouter>
-                <div className="flex flex-col w-[100vw] h-[100vh]">
-                    <MenuBar files={{ data: filesState, dispatch: filesDispatch }} />
-                    <FileList data={filesState} dispatch={filesDispatch} />
-                    <div className="grow bg-neutral-900">
-                        <Routes>
-                            <Route path="/" element={<p className="p-5">TODO</p>} />
-                            <Route path="*" element={<p className="p-5">Unknown page: {path}</p>} />
-                        </Routes>
-                    </div>
+            ? <div className="flex flex-col w-[100vw] h-[100vh]">
+                <MenuBar files={{ data: filesState, dispatch: filesDispatch }} />
+                <FileList data={filesState} dispatch={filesDispatch} />
+                <div className="grow bg-neutral-900">
+                    <p className="p-5">TODO</p>
                 </div>
-            </BrowserRouter>
+            </div>
             : <div className="flex items-center justify-center w-[100vw] h-[100vh]">
                 <span className="font-light text-6xl">Loading...</span>
             </div>
