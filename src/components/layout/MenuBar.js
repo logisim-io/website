@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ChevronDownIcon from '@/assets/icons/chevron-down.svg';
 
-export default function MenuBar() {
+export default function MenuBar({ files: [filesState, filesDispatch] }) {
     const [currentDropdown, setCurrentDropdown] = useState(null);
 
     useEffect(() => {
@@ -24,6 +24,11 @@ export default function MenuBar() {
         return () => document.removeEventListener('click', onClick);
     }, [currentDropdown]);
 
+    const newFile = () => {
+        setCurrentDropdown(null);
+        filesDispatch({ type: 'CREATE_FILE' });
+    };
+
     return (
         <ul className="flex bg-neutral-900 text-sm">
             <li>
@@ -42,7 +47,7 @@ export default function MenuBar() {
                     </button>
                     <ul className={`list-none absolute z-10 flex flex-col min-w-full w-[240px] top-full left-0 bg-neutral-800 ${currentDropdown === 'file' ? 'block' : 'hidden'}`}>
                         <li>
-                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">New File</button>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left" onClick={() => newFile()}>New File</button>
                         </li>
                         <li>
                             <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save...</button>
