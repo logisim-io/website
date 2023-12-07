@@ -54,7 +54,13 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                             <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save...</button>
                         </li>
                         <li>
-                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save as...</button>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save As...</button>
+                        </li>
+                        <li>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Import</button>
+                        </li>
+                        <li>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Export</button>
                         </li>
                     </ul>
                 </div>
@@ -106,22 +112,6 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                                 <CheckIcon width="16" height="16" />
                                 <span>Gates</span>
                             </button>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <div className="relative" data-dropdown="simulate">
-                    <button type="button" className={`flex items-center gap-1 px-3 py-2  ${currentDropdown === 'simulate' ? 'bg-neutral-800' : 'hover:bg-neutral-800'}`} onClick={() => setCurrentDropdown(currentDropdown === 'simulate' ? null : 'simulate')} onMouseOver={() => currentDropdown && setCurrentDropdown('simulate')}>
-                        <span>Simulate</span>
-                        <ChevronDownIcon width="14" height="14" className="text-neutral-500" />
-                    </button>
-                    <ul className={`list-none absolute z-10 flex flex-col min-w-full w-[240px] top-full left-0 bg-neutral-800 ${currentDropdown === 'simulate' ? 'block' : 'hidden'}`}>
-                        <li>
-                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Start</button>
-                        </li>
-                        <li>
-                            <button type="button" className="px-3 py-2 text-neutral-500 cursor-not-allowed w-full text-left">Stop</button>
                         </li>
                     </ul>
                 </div>
