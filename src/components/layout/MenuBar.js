@@ -48,10 +48,10 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                     </button>
                     <ul className={`list-none absolute z-10 flex flex-col min-w-full w-[240px] top-full left-0 bg-neutral-800 ${currentDropdown === 'file' ? 'block' : 'hidden'}`}>
                         <li>
-                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left" onClick={() => newFile()}>New File</button>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left" onClick={() => newFile()}>New</button>
                         </li>
                         <li>
-                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save...</button>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save</button>
                         </li>
                         <li>
                             <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Save As...</button>
@@ -72,6 +72,9 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                         <ChevronDownIcon width="14" height="14" className="text-neutral-500" />
                     </button>
                     <ul className={`list-none absolute z-10 flex flex-col min-w-full w-[240px] top-full left-0 bg-neutral-800 ${currentDropdown === 'edit' ? 'block' : 'hidden'}`}>
+                        <li>
+                            <span className="block px-3 py-2 text-neutral-500 text-xs">Clipboard: Empty</span>
+                        </li>
                         <li>
                             <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">Copy</button>
                         </li>
@@ -105,7 +108,7 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                     </button>
                     <ul className={`list-none absolute z-10 flex flex-col min-w-full w-[240px] top-full left-0 bg-neutral-800 ${currentDropdown === 'view' ? 'block' : 'hidden'}`}>
                         <li>
-                            <span className="block px-3 py-2 text-neutral-500 text-sm">Panels</span>
+                            <span className="block px-3 py-2 text-neutral-500 text-xs">Panels</span>
                         </li>
                         <li>
                             <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left flex items-center gap-2">
