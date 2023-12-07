@@ -20,15 +20,15 @@ const gates = [
     { name: 'XNOR', inputs: 2, outputs: 1 }
 ];
 
-export default function Sidebar({ className = '' }) {
+export default function Sidebar({ className = '', isLocked = false }) {
     const [currentTool, setCurrentTool] = useState('selection');
 
     return (
         <div className={`flex gap-3 ${className}`}>
-            <Toolbar currentTool={currentTool} setCurrentTool={setCurrentTool} />
+            <Toolbar currentTool={currentTool} setCurrentTool={setCurrentTool} isLocked={isLocked} />
             {
                 currentTool === 'gates'
-                    ? <GatesPanel />
+                    ? <GatesPanel isLocked={isLocked} />
                     : currentTool === 'wire'
                         ? <WiresPanel />
                         : <NoOptionsPanel />
@@ -37,9 +37,11 @@ export default function Sidebar({ className = '' }) {
     );
 }
 
-export function Toolbar({ currentTool, setCurrentTool }) {
+export function Toolbar({ currentTool, setCurrentTool, isLocked = false }) {
     useEffect(() => {
         const onKeyDown = (event) => {
+            if (isLocked) return;
+
             switch (event.code) {
                 case 'KeyS': {
                     setCurrentTool('selection');
@@ -67,14 +69,14 @@ export function Toolbar({ currentTool, setCurrentTool }) {
         window.addEventListener('keydown', onKeyDown);
 
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, []);
+    }, [isLocked]);
 
     return (
         <div className="flex flex-col gap-3 p-3 rounded bg-neutral-900 w-[128px]">
             <p className="text-center font-bold text-neutral-300">Tools</p>
             <ul className="grow flex flex-col gap-2">
                 <li>
-                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${currentTool === 'selection' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('selection')}>
+                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${isLocked ? 'text-neutral-500 cursor-not-allowed' : currentTool === 'selection' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('selection')} disabled={isLocked}>
                         <MousePointerIcon width="18" height="18" />
                         <div className="flex items-center gap-1 text-xs">
                             <span>Selection</span>
@@ -83,7 +85,7 @@ export function Toolbar({ currentTool, setCurrentTool }) {
                     </button>
                 </li>
                 <li>
-                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${currentTool === 'wire' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('wire')}>
+                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${isLocked ? 'text-neutral-500 cursor-not-allowed' : currentTool === 'wire' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('wire')} disabled={isLocked}>
                         <PenToolIcon width="18" height="18" />
                         <div className="flex items-center gap-1 text-xs">
                             <span>Wire</span>
@@ -92,7 +94,7 @@ export function Toolbar({ currentTool, setCurrentTool }) {
                     </button>
                 </li>
                 <li>
-                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${currentTool === 'gates' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('gates')}>
+                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${isLocked ? 'text-neutral-500 cursor-not-allowed' : currentTool === 'gates' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('gates')} disabled={isLocked}>
                         <CPUIcon width="18" height="18" />
                         <div className="flex items-center gap-1 text-xs">
                             <span>Gates</span>
@@ -101,7 +103,7 @@ export function Toolbar({ currentTool, setCurrentTool }) {
                     </button>
                 </li>
                 <li>
-                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${currentTool === 'delete' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('delete')}>
+                    <button type="button" className={`w-full p-3 flex flex-col items-center justify-center gap-1 ${isLocked ? 'text-neutral-500 cursor-not-allowed' : currentTool === 'delete' ? 'text-white bg-neutral-800' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'} rounded`} onClick={() => setCurrentTool('delete')} disabled={isLocked}>
                         <DeleteIcon width="18" height="18" />
                         <div className="flex items-center gap-1 text-xs">
                             <span>Delete</span>
@@ -114,14 +116,14 @@ export function Toolbar({ currentTool, setCurrentTool }) {
     );
 }
 
-export function GatesPanel() {
+export function GatesPanel({ isLocked }) {
     // TODO make gates a component attribute
 
     const [currentGate, setCurrentGate] = useState(null);
 
     useEffect(() => {
         const onKeyDown = (event) => {
-            if (!event.code.startsWith('Digit')) return;
+            if (isLocked || !event.code.startsWith('Digit')) return;
 
             const newGateID = parseInt(event.code.replace('Digit', ''));
             if (newGateID < 1 || newGateID > gates.length) return;
@@ -132,7 +134,7 @@ export function GatesPanel() {
         window.addEventListener('keydown', onKeyDown);
 
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, [gates]);
+    }, [gates, isLocked]);
 
     return (
         <div className="flex flex-col gap-3 p-3 rounded bg-neutral-900 w-[240px]">
@@ -142,27 +144,27 @@ export function GatesPanel() {
                     {
                         gates.map((gate, index) => (
                             <li key={index}>
-                                <div className={`flex items-start p-3 rounded cursor-pointer select-none ${currentGate === index ? 'bg-neutral-800' : 'hover:bg-neutral-800'}`} onClick={() => setCurrentGate(index)}>
+                                <button type="button" className={`w-full flex items-start p-3 rounded select-none ${isLocked ? 'text-neutral-500 cursor-not-allowed' : currentGate === index ? 'bg-neutral-800 cursor-pointer' : 'hover:bg-neutral-800 cursor-pointer'}`} onClick={() => setCurrentGate(index)} disabled={isLocked}>
                                     <div>
                                         <p className="flex items-center gap-1 font-mono">
                                             {
                                                 index < 9
-                                                    ? <span className="text-neutral-300 text-xs">({index + 1})</span>
+                                                    ? <span className={`${isLocked ? 'text-neutral-500' : 'text-neutral-300'} text-xs`}>({index + 1})</span>
                                                     : null
                                             }
                                             <span>{gate.name} Gate</span>
                                         </p>
-                                        <div className="flex items-center gap-1 text-neutral-400">
+                                        <div className={`flex items-center gap-1 ${isLocked ? 'text-neutral-500' : 'text-neutral-400'}`}>
                                             <span>{gate.inputs}</span>
                                             <LogInIcon width="12" height="12" />
                                             <LogOutIcon width="12" height="12" className="ml-3" />
                                             <span>{gate.outputs}</span>
                                         </div>
                                     </div>
-                                    <button type="button" className="ml-auto p-2 rounded text-neutral-300 hover:bg-neutral-700 hover:text-white">
+                                    <button type="button" className={`ml-auto p-2 rounded ${isLocked ? 'text-neutral-500' : 'text-neutral-300 hover:bg-neutral-700 hover:text-white'}`}>
                                         <InfoIcon width="16" height="16" />
                                     </button>
-                                </div>
+                                </button>
                             </li>
                         ))
                     }

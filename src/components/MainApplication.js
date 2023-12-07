@@ -5,7 +5,7 @@ import FileList from '@/components/layout/FileList';
 import MenuBar from '@/components/layout/MenuBar';
 import Sidebar from '@/components/layout/Sidebar';
 import Canvas from '@/components/simulation/Canvas';
-import Controls from '@/components/simulation/Controls';
+import useSimulationControls from '@/hooks/useSimulationControls';
 
 const filesReducer = (state, action) => {
     switch (action.type) {
@@ -24,6 +24,7 @@ const filesReducer = (state, action) => {
 
 export default function MainApplication() {
     const [render, setRender] = useState(false);
+    const simulationControls = useSimulationControls();
     const [filesState, filesDispatch] = useReducer(filesReducer, { activeIndex: 0, list: [{ name: 'Untitled', dirty: true }] });
 
     useEffect(() => setRender(true), []);
@@ -33,7 +34,7 @@ export default function MainApplication() {
             ? <div className="flex flex-col w-[100vw] h-[100vh]">
                 <MenuBar files={{ data: filesState, dispatch: filesDispatch }} />
                 <div className="grow flex gap-3 p-3">
-                    <Sidebar />
+                    <Sidebar isLocked={simulationControls.isRunning} />
                     <div className="grow flex flex-col gap-3">
                         <div className="grow flex flex-col">
                             <FileList data={filesState} dispatch={filesDispatch} />
@@ -41,7 +42,7 @@ export default function MainApplication() {
                                 <Canvas className="w-full h-full" />
                             </div>
                         </div>
-                        <Controls />
+                        {simulationControls.render}
                     </div>
                 </div>
             </div>
