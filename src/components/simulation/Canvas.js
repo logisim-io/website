@@ -11,6 +11,7 @@ export default function Canvas({ className }) {
         let width = 0, height = 0;
         let currentFrame;
         let cameraX = 0, cameraY = 0, isPanning = false;
+        let mouseX = 0, mouseY = 0, isMousedOver = false;
 
         const render = () => {
             const gridSpacing = 48 * window.devicePixelRatio;
@@ -44,13 +45,23 @@ export default function Canvas({ className }) {
 
             for (let x = cameraX % gridSpacing; x < width; x += gridSpacing) {
                 for (let y = cameraY % gridSpacing; y < height; y += gridSpacing) {
-                    ctx.beginPath();
-                    ctx.fillStyle = '#404040';
-                    ctx.strokeStyle = '#171717';
-                    ctx.lineWidth = 4 * window.devicePixelRatio;
-                    ctx.rect(x - 3 * window.devicePixelRatio, y - 3 * window.devicePixelRatio, 6 * window.devicePixelRatio, 6 * window.devicePixelRatio);
-                    ctx.fill();
-                    ctx.stroke();
+                    if (isMousedOver && mouseX >= x - gridSpacing / 2 && mouseX < x + gridSpacing / 2 && mouseY >= y - gridSpacing / 2 && mouseY < y + gridSpacing / 2) {
+                        ctx.beginPath();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.strokeStyle = '#171717';
+                        ctx.lineWidth = 4 * window.devicePixelRatio;
+                        ctx.rect(x - 4 * window.devicePixelRatio, y - 4 * window.devicePixelRatio, 8 * window.devicePixelRatio, 8 * window.devicePixelRatio);
+                        ctx.fill();
+                        ctx.stroke();
+                    } else {
+                        ctx.beginPath();
+                        ctx.fillStyle = '#404040';
+                        ctx.strokeStyle = '#171717';
+                        ctx.lineWidth = 4 * window.devicePixelRatio;
+                        ctx.rect(x - 3 * window.devicePixelRatio, y - 3 * window.devicePixelRatio, 6 * window.devicePixelRatio, 6 * window.devicePixelRatio);
+                        ctx.fill();
+                        ctx.stroke();
+                    }
                 }
             }
 
@@ -72,16 +83,27 @@ export default function Canvas({ className }) {
         };
 
         const onMouseMove = (event) => {
-            if (!isPanning) return;
+            isMousedOver = true;
 
-            console.log(event);
+            if (isPanning) {
+                cameraX += event.movementX * window.devicePixelRatio;
+                cameraY += event.movementY * window.devicePixelRatio;
+            }
 
-            cameraX += event.movementX * window.devicePixelRatio;
-            cameraY += event.movementY * window.devicePixelRatio;
+            mouseX = event.offsetX * window.devicePixelRatio;
+            mouseY = event.offsetY * window.devicePixelRatio;
         };
 
         const onMouseUp = () => {
             isPanning = false;
+        };
+
+        const onMouseOver = () => {
+            isMousedOver = true;
+        };
+
+        const onMouseOut = () => {
+            isMousedOver = false;
         };
 
         onResize();
@@ -90,18 +112,22 @@ export default function Canvas({ className }) {
         const parentResizeObserver = new ResizeObserver(onResize);
         parentResizeObserver.observe(canvasElem.current.parentElement);
 
+        canvasElem.current.addEventListener('mouseover', onMouseOver);
+        canvasElem.current.addEventListener('mouseout', onMouseOut);
         canvasElem.current.addEventListener('mousedown', onMouseDown);
         canvasElem.current.addEventListener('mousemove', onMouseMove);
-        canvasElem.current.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('mouseup', onMouseUp);
 
         return () => {
             parentResizeObserver.disconnect();
 
             cancelAnimationFrame(currentFrame);
 
+            canvasElem.current.removeEventListener('mouseover', onMouseOver);
+            canvasElem.current.removeEventListener('mouseout', onMouseOut);
             canvasElem.current.removeEventListener('mousedown', onMouseDown);
             canvasElem.current.removeEventListener('mousemove', onMouseMove);
-            canvasElem.current.removeEventListener('mouseup', onMouseUp);
+            window.removeEventListener('mouseup', onMouseUp);
         };
     }, [canvasElem]);
 
