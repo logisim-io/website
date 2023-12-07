@@ -5,6 +5,7 @@ import FileList from '@/components/layout/FileList';
 import MenuBar from '@/components/layout/MenuBar';
 import Sidebar from '@/components/layout/Sidebar';
 import Canvas from '@/components/simulation/Canvas';
+import Controls from '@/components/simulation/Controls';
 
 const filesReducer = (state, action) => {
     switch (action.type) {
@@ -40,9 +41,7 @@ export default function MainApplication() {
                                 <Canvas className="w-full h-full" />
                             </div>
                         </div>
-                        <div className="bg-neutral-900 rounded p-3">
-                            <p className="text-lg font-bold text-neutral-300">Simulation Controls</p>
-                        </div>
+                        <Controls />
                     </div>
                 </div>
             </div>
