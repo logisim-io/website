@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import CheckIcon from '@/assets/icons/check.svg';
 import ChevronDownIcon from '@/assets/icons/chevron-down.svg';
 
 export default function MenuBar({ files: { dispatch: filesDispatch } }) {
@@ -98,7 +99,13 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                     </button>
                     <ul className={`list-none absolute z-10 flex flex-col min-w-full w-[240px] top-full left-0 bg-neutral-800 ${currentDropdown === 'view' ? 'block' : 'hidden'}`}>
                         <li>
-                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left">&times; Components</button>
+                            <span className="block px-3 py-2 text-neutral-500 text-sm">Panels</span>
+                        </li>
+                        <li>
+                            <button type="button" className="px-3 py-2 hover:bg-neutral-700 w-full text-left flex items-center gap-2">
+                                <CheckIcon width="16" height="16" />
+                                <span>Gates</span>
+                            </button>
                         </li>
                     </ul>
                 </div>

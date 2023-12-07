@@ -3,6 +3,8 @@
 import { useEffect, useReducer, useState } from 'react';
 import FileList from '@/components/layout/FileList';
 import MenuBar from '@/components/layout/MenuBar';
+import Sidebar from '@/components/layout/Sidebar';
+import Canvas from '@/components/simulation/Canvas';
 
 const filesReducer = (state, action) => {
     switch (action.type) {
@@ -29,9 +31,14 @@ export default function MainApplication() {
         render
             ? <div className="flex flex-col w-[100vw] h-[100vh]">
                 <MenuBar files={{ data: filesState, dispatch: filesDispatch }} />
-                <FileList data={filesState} dispatch={filesDispatch} />
-                <div className="grow bg-neutral-900">
-                    <p className="p-5">TODO</p>
+                <div className="grow flex gap-3 p-3">
+                    <Sidebar />
+                    <div className="grow flex flex-col">
+                        <FileList data={filesState} dispatch={filesDispatch} />
+                        <div className="grow bg-neutral-900 rounded overflow-hidden">
+                            <Canvas className="w-full h-full" />
+                        </div>
+                    </div>
                 </div>
             </div>
             : <div className="flex items-center justify-center w-[100vw] h-[100vh]">
