@@ -33,10 +33,15 @@ export default function MainApplication() {
                 <MenuBar files={{ data: filesState, dispatch: filesDispatch }} />
                 <div className="grow flex gap-3 p-3">
                     <Sidebar />
-                    <div className="grow flex flex-col">
-                        <FileList data={filesState} dispatch={filesDispatch} />
-                        <div className="grow bg-neutral-900 rounded overflow-hidden">
-                            <Canvas className="w-full h-full" />
+                    <div className="grow flex flex-col gap-3">
+                        <div className="grow flex flex-col">
+                            <FileList data={filesState} dispatch={filesDispatch} />
+                            <div className={`grow bg-neutral-900 ${filesState.activeIndex !== 0 ? 'rounded' : 'rounded-b rounded-r'} overflow-hidden`}>
+                                <Canvas className="w-full h-full" />
+                            </div>
+                        </div>
+                        <div className="bg-neutral-900 rounded p-3">
+                            <p className="text-lg font-bold text-neutral-300">Simulation Controls</p>
                         </div>
                     </div>
                 </div>

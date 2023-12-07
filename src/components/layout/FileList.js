@@ -5,7 +5,7 @@ import CloseIcon from '@/assets/icons/x.svg';
 
 export default function FileList({ data, dispatch }) {
     return (
-        <ul className="flex items-center gap-1 px-3">
+        <ul className="flex items-center gap-1">
             {
                 data.list.map((file, index) => (
                     <li key={index}>
@@ -42,6 +42,8 @@ export function FileTab({ active, name, dirty, isClosable = true, onChange, onCl
     };
 
     const handleKeyDown = (event) => {
+        event.stopPropagation();
+
         switch (event.key) {
             case 'Enter': {
                 onRename(event.target.value);

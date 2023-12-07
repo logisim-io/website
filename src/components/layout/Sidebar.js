@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CPUIcon from '@/assets/icons/cpu.svg';
 import DeleteIcon from '@/assets/icons/delete.svg';
 import InfoIcon from '@/assets/icons/info.svg';
@@ -31,13 +31,44 @@ export default function Sidebar({ className = '' }) {
                     ? <GatesPanel />
                     : currentTool === 'wire'
                         ? <WiresPanel />
-                        : <BlankPanel />
+                        : <NoOptionsPanel />
             }
         </div>
     );
 }
 
 export function Toolbar({ currentTool, setCurrentTool }) {
+    useEffect(() => {
+        const onKeyDown = (event) => {
+            switch (event.code) {
+                case 'KeyS': {
+                    setCurrentTool('selection');
+
+                    break;
+                }
+                case 'KeyW': {
+                    setCurrentTool('wire');
+
+                    break;
+                }
+                case 'KeyG': {
+                    setCurrentTool('gates');
+
+                    break;
+                }
+                case 'KeyD': {
+                    setCurrentTool('delete');
+
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, []);
+
     return (
         <div className="flex flex-col gap-3 p-3 rounded bg-neutral-900 w-[128px]">
             <p className="text-center font-bold text-neutral-300">Tools</p>
@@ -84,7 +115,24 @@ export function Toolbar({ currentTool, setCurrentTool }) {
 }
 
 export function GatesPanel() {
+    // TODO make gates a component attribute
+
     const [currentGate, setCurrentGate] = useState(null);
+
+    useEffect(() => {
+        const onKeyDown = (event) => {
+            if (!event.code.startsWith('Digit')) return;
+
+            const newGateID = parseInt(event.code.replace('Digit', ''));
+            if (newGateID < 1 || newGateID > gates.length) return;
+
+            setCurrentGate(newGateID - 1);
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [gates]);
 
     return (
         <div className="flex flex-col gap-3 p-3 rounded bg-neutral-900 w-[240px]">
@@ -96,7 +144,14 @@ export function GatesPanel() {
                             <li key={index}>
                                 <div className={`flex items-start p-3 rounded cursor-pointer select-none ${currentGate === index ? 'bg-neutral-800' : 'hover:bg-neutral-800'}`} onClick={() => setCurrentGate(index)}>
                                     <div>
-                                        <p className="font-mono">{gate.name} Gate</p>
+                                        <p className="flex items-center gap-1 font-mono">
+                                            {
+                                                index < 9
+                                                    ? <span className="text-neutral-300 text-xs">({index + 1})</span>
+                                                    : null
+                                            }
+                                            <span>{gate.name} Gate</span>
+                                        </p>
                                         <div className="flex items-center gap-1 text-neutral-400">
                                             <span>{gate.inputs}</span>
                                             <LogInIcon width="12" height="12" />
@@ -130,10 +185,10 @@ export function WiresPanel() {
     );
 }
 
-export function BlankPanel() {
+export function NoOptionsPanel() {
     return (
         <div className="flex items-center justify-center rounded bg-neutral-900 w-[240px]">
-            <p className="text-center text-neutral-500 text-sm">Select a different tool...</p>
+            <p className="text-center text-neutral-500 text-sm">No options for this tool</p>
         </div>
     );
 }
