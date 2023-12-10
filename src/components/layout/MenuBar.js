@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import CheckIcon from '@/assets/icons/check.svg';
 import ChevronDownIcon from '@/assets/icons/chevron-down.svg';
+import UserIcon from '@/assets/icons/user.svg';
 
-export default function MenuBar({ files: { dispatch: filesDispatch } }) {
+export default function MenuBar({ files, authentication }) {
     const [currentDropdown, setCurrentDropdown] = useState(null);
 
     useEffect(() => {
@@ -27,7 +28,7 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
 
     const newFile = () => {
         setCurrentDropdown(null);
-        filesDispatch({ type: 'CREATE_FILE' });
+        files.dispatch({ type: 'CREATE_FILE' });
     };
 
     return (
@@ -134,20 +135,33 @@ export default function MenuBar({ files: { dispatch: filesDispatch } }) {
                     </ul>
                 </div>
             </li>
-            <li className="ml-auto">
-                <div className="relative">
-                    <button type="button" className="px-3 py-2  hover:bg-neutral-800">
-                        <span>Log in</span>
-                    </button>
-                </div>
-            </li>
-            <li>
-                <div className="relative">
-                    <button type="button" className="px-3 py-2  hover:bg-neutral-800">
-                        <span>Sign up</span>
-                    </button>
-                </div>
-            </li>
+            {
+                authentication.data.isLoggedIn
+                    ? <li className="ml-auto">
+                        <div className="relative">
+                            <button type="button" className="flex items-center gap-2 px-3 py-2 hover:bg-neutral-800">
+                                <UserIcon width="16" height="16" />
+                                <span>{authentication.data.user.username}</span>
+                            </button>
+                        </div>
+                    </li>
+                    : <>
+                        <li className="ml-auto">
+                            <div className="relative">
+                                <button type="button" className="px-3 py-2 hover:bg-neutral-800" onClick={() => authentication.dispatch({ type: 'SHOW_LOGIN_MODAL' })}>
+                                    <span>Log in</span>
+                                </button>
+                            </div>
+                        </li>
+                        <li>
+                            <div className="relative">
+                                <button type="button" className="px-3 py-2 hover:bg-neutral-800" onClick={() => authentication.dispatch({ type: 'SHOW_SIGNUP_MODAL' })}>
+                                    <span>Sign up</span>
+                                </button>
+                            </div>
+                        </li>
+                    </>
+            }
         </ul>
     );
 }

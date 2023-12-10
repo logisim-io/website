@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import ClockIcon from '@/assets/icons/clock.svg';
 import OctagonIcon from '@/assets/icons/octagon.svg';
 import PauseIcon from '@/assets/icons/pause.svg';
@@ -5,6 +6,47 @@ import PlayIcon from '@/assets/icons/play.svg';
 import CloseIcon from '@/assets/icons/x.svg';
 
 export default function Controls({ className = '', currentTick = 0, tickSpeed = 10, isRunning = false, isPaused = false, onTickSpeedUpdate, onStart, onStop, onPause, onNextTick, onReset }) {
+    useEffect(() => {
+        const onKeyDown = (event) => {
+            switch (event.code) {
+                case 'ArrowRight': {
+                    if (isRunning) return;
+
+                    onNextTick();
+
+                    break;
+                }
+                case 'KeyR': {
+                    if (currentTick < 1 || isRunning) return;
+
+                    onReset();
+
+                    break;
+                }
+                case 'Space': {
+                    if (isRunning) {
+                        onPause();
+                    } else {
+                        onStart();
+                    }
+
+                    break;
+                }
+                case 'Escape': {
+                    if (!isRunning && !isPaused) return;
+
+                    onStop();
+
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [isRunning, isPaused, currentTick]);
+
     return (
         <div className={`flex items-center gap-8 bg-neutral-900 rounded p-4 ${className}`}>
             <div>
